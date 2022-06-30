@@ -50,7 +50,27 @@ def courses_for_lecturers(json_directory_path, output_json_path):
     :param json_directory_path: Path of the semsters_data files.
     :param output_json_path: Path of the output json file.
     """
-    pass
+    lecturesCourses = {}
+    for filename in os.listdir(json_directory_path):
+            if filename.endswith(".json"):
+                with open(os.path.join(json_directory_path, filename), 'r') as file:
+                    fileData = json.load(file)
+                    for courseData in fileData.values():
+                        courseName = list(courseData.values())[0]
+                        lecturesList = list(courseData.values())[1]
+                        for lecturerName in lecturesList:
+                            if(not lecturerName in lecturesCourses):
+                                lecturesCourses[lecturerName] = [courseName]
+                            else:
+                                if(lecturesCourses[lecturerName].count(courseName) == 0):
+                                    lecturesCourses[lecturerName].append(courseName)
+            else:
+                continue
+
+    with open(output_json_path, 'w') as outputFile:
+        json.dump(lecturesCourses, outputFile, indent = 4)
+       
+            
 
 
 
